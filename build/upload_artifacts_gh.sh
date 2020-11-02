@@ -10,7 +10,9 @@ REPO=$1
 echo "===> Uploading to GH ${REPO}:${TAG}"
 
 cd dist
-for package in $(find  -regex ".*\.\(msi\|rpm\|deb\|zip\|tar.gz\)");do
+files=$(find  -regex ".*\.\(msi\|rpm\|deb\|zip\|tar.gz\)")
+echo "===> found files: ${files}"
+for package in files;do
   echo "===> Uploading package: ${package}"
   gh release upload ${TAG} ${package} -R ${REPO}
 done
