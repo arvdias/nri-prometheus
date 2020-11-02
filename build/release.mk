@@ -21,21 +21,19 @@ release/clean:
 .PHONY : release/deps
 release/deps: $(GORELEASER_BIN)
 	@echo "===> $(INTEGRATION) === [release/deps] installing deps"
-	#@go get github.com/josephspurrier/goversioninfo/cmd/goversioninfo
-	#@go mod download
-	#@go mod tidy
+	@go get github.com/josephspurrier/goversioninfo/cmd/goversioninfo
+	# remove goversioninfo from go.mod
+	@go mod tidy
 	
 
 .PHONY : release/build
 release/build: release/deps release/clean
 ifeq ($(PRERELEASE), true)
 	@echo "===> $(INTEGRATION) === [release/build] PRE-RELEASE compiling all binaries, creating packages, archives"
-	@$(GORELEASER_BIN) release
-	# --config $(CURDIR)/build/.goreleaser.yml
+	@$(GORELEASER_BIN) release --config $(CURDIR)/.goreleaser.yml --skip-validate --rm-dist
 else
 	@echo "===> $(INTEGRATION) === [release/build] build compiling all binaries"
-	@$(GORELEASER_BIN) build --snapshot
-	# --config $(CURDIR)/build/.goreleaser.yml
+	@$(GORELEASER_BIN) build --config $(CURDIR)/.goreleaser.yml --snapshot --rm-dist
 endif
 
 .PHONY : release/fix-archive
