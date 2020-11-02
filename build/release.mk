@@ -55,8 +55,7 @@ release/publish:
 	@bash $(CURDIR)/build/upload_artifacts_gh.sh ${REPO_FULL_NAME}
 
 .PHONY : release
-release: release/build release/fix-archive release/publish release/clean
-	# release/sign/nix 
+release: release/build release/fix-archive release/sign/nix release/publish release/clean
 	@echo "===> $(INTEGRATION) === [release/publish] full pre-release cycle complete for nix"
 
 OS := $(shell uname -s)
