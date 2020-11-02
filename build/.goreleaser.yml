@@ -1,4 +1,6 @@
 builds:
+  - env:
+    - CGO_ENABLED=0
   - id: nri-prometheus-nix
     main: ./cmd/nri-prometheus/
     binary: nri-prometheus
