@@ -25,6 +25,7 @@ env:
   SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
   TAG: ${{ github.event.release.tag_name }}
   GH_VERSION: '1.2.0'
+
 jobs:
 
   # validate:
@@ -132,6 +133,7 @@ jobs:
         run: make release
         env:
           PRERELEASE: true
+          PUSH_DOCKER: false
       - name: upload assets
         run: |
           for package in $(find dist/ -regex ".*\.\(msi\|rpm\|deb\|zip\|tar.gz\)");do
