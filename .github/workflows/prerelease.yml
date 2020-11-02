@@ -130,6 +130,8 @@ jobs:
           sudo apt-get -y install /tmp/gh_${{env.GH_VERSION}}_linux_amd64.deb
       - name: do the release
         run: make release
+        env:
+          PRERELEASE: true
       - name: upload assets
         run: |
           for package in $(find dist/ -regex ".*\.\(msi\|rpm\|deb\|zip\|tar.gz\)");do
