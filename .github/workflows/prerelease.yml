@@ -120,6 +120,7 @@ jobs:
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
+          path: src/github.com/${{env.ORIGINAL_REPO_NAME}} 
       - name: setup Go
         uses: actions/setup-go@v2
         with:
