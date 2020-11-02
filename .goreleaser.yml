@@ -2,9 +2,11 @@ builds:
   - id: nri-prometheus-nix
     main: ./cmd/nri-prometheus/
     binary: nri-prometheus
-    gobinary: "go1.13.15"
+    #gobinary: "go1.13.15"
     ldflags:
       - -s -w -X internal/integration/integration.Version={{.Version}} #-X main.gitCommit={{.Commit}} -X main.buildDate={{.Date}}
+    env:
+      - CGO_ENABLED=0
     goos:
       - linux
       - darwin
@@ -25,7 +27,7 @@ builds:
   - id: nri-prometheus-win
     main: ./cmd/nri-prometheus/
     binary: nri-prometheus
-    gobinary: "go1.13.15"
+    #gobinary: "go1.13.15"
     ldflags:
       - -s -w -X internal/integration/integration.Version={{.Version}} #-X main.gitCommit={{.Commit}} -X main.buildDate={{.Date}}
     goos:
@@ -106,7 +108,7 @@ dockers:
       - nri-prometheus
     image_templates:
       - 'newrelic/nri-prometheus:{{ .Major }}.{{ .Minor }}'
-    skip_push: auto
+    skip_push: true # move to auto later
   - dockerfile: Dockerfile.release
     binaries:
       - nri-prometheus

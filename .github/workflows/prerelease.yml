@@ -75,26 +75,26 @@ jobs:
   #         .\build\windows\unit_tests.ps1
 
   # can't run this step inside of container because of tests specific
-  test-integration-nix:
-    name: Run integration tests on *Nix
-    runs-on: ubuntu-20.04
-    defaults:
-      run:
-        working-directory: src/github.com/${{env.ORIGINAL_REPO_NAME}}
-    steps:
-      - name: Check out code
-        uses: actions/checkout@v2
-        with:
-          fetch-depth: 1
-          path: src/github.com/${{env.ORIGINAL_REPO_NAME}}
-      - name: Install Go
-        uses: actions/setup-go@v2
-        with:
-          go-version: ${{env.GO_VERSION}}
-      - name: Integration test
-        env:
-          GOPATH: ${{ github.workspace }}
-        run: make integration-test
+  # test-integration-nix:
+  #   name: Run integration tests on *Nix
+  #   runs-on: ubuntu-20.04
+  #   defaults:
+  #     run:
+  #       working-directory: src/github.com/${{env.ORIGINAL_REPO_NAME}}
+  #   steps:
+  #     - name: Check out code
+  #       uses: actions/checkout@v2
+  #       with:
+  #         fetch-depth: 1
+  #         path: src/github.com/${{env.ORIGINAL_REPO_NAME}}
+  #     - name: Install Go
+  #       uses: actions/setup-go@v2
+  #       with:
+  #         go-version: ${{env.GO_VERSION}}
+  #     - name: Integration test
+  #       env:
+  #         GOPATH: ${{ github.workspace }}
+  #       run: make integration-test
 
   # prerelease:
   #   name: Build binary for *Nix/Win, create archives for *Nix/Win, create packages for *Nix, upload all artifacts into GH Release assets
@@ -115,16 +115,16 @@ jobs:
   prerelease:
     name: Use goreleaser for releasing
     runs-on: ubuntu-20.04
-    steps:
+    steps:    
       - name: checkout
         uses: actions/checkout@v2
-        # with:
-        #   fetch-depth: 0
+        with:
+          fetch-depth: 0
       - name: setup Go
         uses: actions/setup-go@v2
         with:
           go-version: ${{ env.GO_VERSION }}
-      - name: do release
+      - name: do the release
         run: make release
 
 
@@ -136,12 +136,7 @@ jobs:
   #  #if: "!github.event.release.prerelease"
   #  #if: "github.event.release.prerelease"
   #  steps:
-  #    - uses: actions/checkout@v2
-  #    - name: Install Go
-  #      uses: actions/setup-go@v2
-  #      with:
-  #        go-version: ${{env.GO_VERSION}}
-  #    - name: Get the version
+  #    - name: get the version
   #      id: get_version
   #      run: echo ::set-output name=VERSION::$(echo $TAG | cut  -c 2-)
   #    - name: Publish docker image
