@@ -28,10 +28,11 @@ release/deps: $(GORELEASER_BIN)
 release/build: release/deps release/clean
 ifeq ($(PRERELEASE), true)
 	@echo "===> $(INTEGRATION) === [release/build] PRE-RELEASE compiling all binaries, creating packages, archives"
-	@$(GORELEASER_BIN) release --config $(CURDIR)/build/.goreleaser.yml --rm-dist
+	@$(GORELEASER_BIN) release --config $(CURDIR)/build/.goreleaser.yml
 else
 	@echo "===> $(INTEGRATION) === [release/build] build compiling all binaries"
-	@$(GORELEASER_BIN) build --config $(CURDIR)/build/.goreleaser.yml --snapshot --rm-dist
+	@$(GORELEASER_BIN) build --config $(CURDIR)/build/.goreleaser.yml --snapshot
+	
 endif
 
 .PHONY : release/fix-archive
@@ -54,7 +55,8 @@ release/publish:
 	@bash $(CURDIR)/build/upload_artifacts_gh.sh ${REPO_FULL_NAME}
 
 .PHONY : release
-release: release/build release/fix-archive release/sign/nix release/publish release/clean
+release: release/build release/fix-archive release/publish release/clean
+	# release/sign/nix 
 	@echo "===> $(INTEGRATION) === [release/publish] full pre-release cycle complete for nix"
 
 OS := $(shell uname -s)
