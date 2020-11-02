@@ -4,11 +4,12 @@ RUN apk add --no-cache --upgrade \
         ca-certificates \
         musl=1.1.20-r5
 
-USER nobody
 
-ENTRYPOINT ["/bin/nri-prometheus"]
+COPY dist/nri-prometheus-nix_linux_amd64/nri-prometheus /bin/nri-prometheus
+
+USER nobody
 
 # When standalone is set to true nri-prometheus does not require an infrastructure agent to work and send data
 ENV STANDALONE=TRUE
 
-COPY nri-prometheus /bin/nri-prometheus
+ENTRYPOINT ["/bin/nri-prometheus"]
