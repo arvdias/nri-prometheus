@@ -15,8 +15,8 @@ $(GORELEASER_BIN): bin
 .PHONY : release/clean
 release/clean:
 	@echo "===> $(INTEGRATION) === [release/clean] remove build metadata files"
-	rm -fv $(CURDIR)/cmd/nri-prometheus/versioninfo.json
-	rm -fv $(CURDIR)/cmd/nri-prometheus/resource.syso
+	#rm -fv $(CURDIR)/cmd/nri-prometheus/versioninfo.json
+	#rm -fv $(CURDIR)/cmd/nri-prometheus/resource.syso
 
 .PHONY : release/deps
 release/deps: $(GORELEASER_BIN)
@@ -27,7 +27,7 @@ release/deps: $(GORELEASER_BIN)
 	
 
 .PHONY : release/build
-release/build: release/clean release/deps
+release/build: release/deps release/clean
 ifeq ($(PRERELEASE), true)
 	@echo "===> $(INTEGRATION) === [release/build] PRE-RELEASE compiling all binaries, creating packages, archives"
 	@$(GORELEASER_BIN) release --config $(CURDIR)/build/.goreleaser.yml

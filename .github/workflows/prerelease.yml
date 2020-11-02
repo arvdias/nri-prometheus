@@ -118,9 +118,8 @@ jobs:
     steps:
       - name: checkout
         uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
-          path: src/github.com/${{env.ORIGINAL_REPO_NAME}} 
+        # with:
+        #   fetch-depth: 0
       - name: setup Go
         uses: actions/setup-go@v2
         with:

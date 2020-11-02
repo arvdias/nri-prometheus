@@ -2,7 +2,8 @@ builds:
   - env:
     - CGO_ENABLED=0
   - id: nri-prometheus-nix
-    main: ./cmd/nri-prometheus/
+    #dir: {{.Env.CURDIR}}
+    main: ./nri-prometheus/cmd/nri-prometheus/
     binary: nri-prometheus
     gobinary: "go1.13.15"
     ldflags:
