@@ -98,24 +98,33 @@ archives:
 
 # we use custom publisher for fixing archives and signing them
 release:
-  disable: true
+  disable: false
 
 checksum:
   name_template: 'checksums.txt'
+
 dockers:
-  - dockerfile: Dockerfile.release
+  - 
+    goos: linux
+    goarch: amd64
+    dockerfile: Dockerfile.release
     binaries:
       - nri-prometheus
     image_templates:
       - 'newrelic/nri-prometheus:{{ .Major }}.{{ .Minor }}'
     skip_push: true # move to auto later
-  - dockerfile: Dockerfile.release
+  - 
+    goos: linux
+    goarch: amd64
+    dockerfile: Dockerfile.release
     binaries:
       - nri-prometheus
     image_templates:
       - 'newrelic/nri-prometheus:{{ .Version }}'
+
 snapshot:
   name_template: "{{ .Tag }}-next"
+
 changelog:
   sort: asc
   filters:
