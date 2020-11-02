@@ -126,6 +126,13 @@ jobs:
           go-version: ${{ env.GO_VERSION }}
       - name: do the release
         run: make release
+      - name: Upload assets to a Release
+        uses: AButler/upload-release-assets@v2.0
+        id: upload-release-asset 
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          files: 'dist/*.msi;dist/*.rpm;dist/*.deb;dist/*.zip;dist/*.tar.gz'
+          release-tag: ${{env.TAG}}
 
   # package-win:
   #   name: Create MSI & Upload into GH Release assets

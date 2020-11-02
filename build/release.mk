@@ -53,7 +53,7 @@ release/sign/nix:
 release/publish:
 	@echo "===> $(INTEGRATION) === [release/publish] publishing artifacts"
 	# REPO_FULL_NAME here is only necessary for forks. It can be removed when this is merged into the original repo
-	@bash $(CURDIR)/build/upload_artifacts_gh.sh ${REPO_FULL_NAME}
+	@bash $(CURDIR)/build/upload_artifacts_gh.sh $(REPO_FULL_NAME)
 
 .PHONY : release
 release: release/build release/fix-archive release/publish release/clean
