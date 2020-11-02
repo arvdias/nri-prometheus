@@ -27,22 +27,22 @@ env:
 
 jobs:
 
-  validate:
-    name: Validate code via linters
-    runs-on: ubuntu-20.04
-    steps:
-      - uses: actions/checkout@v2
-      - name: Validate code
-        run: make ci/validate
+  # validate:
+  #   name: Validate code via linters
+  #   runs-on: ubuntu-20.04
+  #   steps:
+  #     - uses: actions/checkout@v2
+  #     - name: Validate code
+  #       run: make ci/validate
 
   # this might not be necessary
-  snyk:
-    name: Run security checks via snyk
-    runs-on: ubuntu-20.04
-    steps:
-      - uses: actions/checkout@v2
-      - name: Scan code for vulnerabilities
-        run: make ci/snyk-test
+  # snyk:
+  #   name: Run security checks via snyk
+  #   runs-on: ubuntu-20.04
+  #   steps:
+  #     - uses: actions/checkout@v2
+  #     - name: Scan code for vulnerabilities
+  #       run: make ci/snyk-test
 
   test-nix:
     name: Run unit tests on *Nix
@@ -105,13 +105,13 @@ jobs:
       - uses: actions/checkout@v2
       - name: Pre release
         run: make ci/prerelease
-      - name: Notify failure via Slack
-        if: ${{ failure() }}
-        uses: archive/github-actions-slack@master
-        with:
-          slack-bot-user-oauth-access-token: ${{ secrets.SLACK_WEBHOOK }}
-          slack-channel: ${{ env.SLACK_CHANNEL }}
-          slack-text: ":shit: Repo: ${{env.REPO_FULL_NAME}}, prerelease for nix FAILURE!"
+      # - name: Notify failure via Slack
+      #   if: ${{ failure() }}
+      #   uses: archive/github-actions-slack@master
+      #   with:
+      #     slack-bot-user-oauth-access-token: ${{ secrets.SLACK_WEBHOOK }}
+      #     slack-channel: ${{ env.SLACK_CHANNEL }}
+      #     slack-text: ":shit: Repo: ${{env.REPO_FULL_NAME}}, prerelease for nix FAILURE!"
 
   #docker-publish:
   #  name: Publish container image to docker hub
@@ -141,42 +141,42 @@ jobs:
   #        tags: newrelic/nri-prometheus:${{ steps.get_version.outputs.VERSION }}
   #        push: false
 
-  package-win:
-    name: Create MSI & Upload into GH Release assets
-    runs-on: windows-2019
-    needs: [prerelease]
-    env:
-      GOPATH: ${{ github.workspace }}
-    defaults:
-      run:
-        working-directory: src/github.com/${{env.ORIGINAL_REPO_NAME}}
-    strategy:
-      matrix:
-        goarch: [amd64,386]
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-        with:
-          path: src/github.com/${{env.ORIGINAL_REPO_NAME}}
-      - name: Get PFX certificate from GH secrets
-        shell: bash
-        run: printf "%s" "$PFX_CERTIFICATE_BASE64" | base64 -d - > wincert.pfx
-      - name: Download zip from GH Release assets and extract .exe
-        shell: pwsh
-        run: |
-          build\windows\download_zip_extract_exe.ps1 "$env:INTEGRATION" ${{ matrix.goarch }} "$env:TAG" "$env:REPO_FULL_NAME"
-      - name: Create MSI
-        shell: pwsh
-        run: |
-          build\windows\package_msi.ps1 -integration "$env:INTEGRATION" -arch ${{ matrix.goarch }} -tag "$env:TAG" -pfx_passphrase "$env:PFX_PASSPHRASE" -pfx_certificate_description "$env:PFX_CERTIFICATE_DESCRIPTION"
-      - name: Upload MSI to GH
-        shell: bash
-        run: |
-          build/windows/upload_msi.sh ${INTEGRATION} ${{ matrix.goarch }} ${TAG} ${REPO_FULL_NAME}
-      - name: Notify failure via Slack
-        if: ${{ failure() }}
-        uses: archive/github-actions-slack@master
-        with:
-          slack-bot-user-oauth-access-token: ${{ secrets.SLACK_WEBHOOK }}
-          slack-channel: ${{ env.SLACK_CHANNEL }}
-          slack-text: ":error: Repo: ${{env.REPO_FULL_NAME}}, prerelease for Windows FAILURE!"
+  # package-win:
+  #   name: Create MSI & Upload into GH Release assets
+  #   runs-on: windows-2019
+  #   needs: [prerelease]
+  #   env:
+  #     GOPATH: ${{ github.workspace }}
+  #   defaults:
+  #     run:
+  #       working-directory: src/github.com/${{env.ORIGINAL_REPO_NAME}}
+  #   strategy:
+  #     matrix:
+  #       goarch: [amd64,386]
+  #   steps:
+  #     - name: Checkout
+  #       uses: actions/checkout@v2
+  #       with:
+  #         path: src/github.com/${{env.ORIGINAL_REPO_NAME}}
+  #     - name: Get PFX certificate from GH secrets
+  #       shell: bash
+  #       run: printf "%s" "$PFX_CERTIFICATE_BASE64" | base64 -d - > wincert.pfx
+  #     - name: Download zip from GH Release assets and extract .exe
+  #       shell: pwsh
+  #       run: |
+  #         build\windows\download_zip_extract_exe.ps1 "$env:INTEGRATION" ${{ matrix.goarch }} "$env:TAG" "$env:REPO_FULL_NAME"
+  #     - name: Create MSI
+  #       shell: pwsh
+  #       run: |
+  #         build\windows\package_msi.ps1 -integration "$env:INTEGRATION" -arch ${{ matrix.goarch }} -tag "$env:TAG" -pfx_passphrase "$env:PFX_PASSPHRASE" -pfx_certificate_description "$env:PFX_CERTIFICATE_DESCRIPTION"
+  #     - name: Upload MSI to GH
+  #       shell: bash
+  #       run: |
+  #         build/windows/upload_msi.sh ${INTEGRATION} ${{ matrix.goarch }} ${TAG} ${REPO_FULL_NAME}
+  #     - name: Notify failure via Slack
+  #       if: ${{ failure() }}
+  #       uses: archive/github-actions-slack@master
+  #       with:
+  #         slack-bot-user-oauth-access-token: ${{ secrets.SLACK_WEBHOOK }}
+  #         slack-channel: ${{ env.SLACK_CHANNEL }}
+  #         slack-text: ":error: Repo: ${{env.REPO_FULL_NAME}}, prerelease for Windows FAILURE!"
