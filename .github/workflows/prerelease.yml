@@ -24,7 +24,7 @@ env:
   SLACK_CHANNEL: ${{ secrets.SLACK_CHANNEL }}
   SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
   TAG: ${{ github.event.release.tag_name }}
-
+  GH_VERSION: '1.2.0'
 jobs:
 
   # validate:
@@ -124,8 +124,18 @@ jobs:
         uses: actions/setup-go@v2
         with:
           go-version: ${{ env.GO_VERSION }}
+      - name: setup github-cli
+        run: |
+          wget -q https://github.com/cli/cli/releases/download/v${GH_VERSION}/gh_${{env.GH_VERSION}}_linux_amd64.deb -O /tmp/gh_${{env.GH_VERSION}}_linux_amd64.deb
+          sudo apt-get -y install /tmp/gh_${{env.GH_VERSION}}_linux_amd64.deb
       - name: do the release
         run: make release
+      - name: upload assets
+        run: |
+          for package in $(find dist/ -regex ".*\.\(msi\|rpm\|deb\|zip\|tar.gz\)");do
+            echo "===> Uploading package: ${package}"
+            gh release upload ${TAG} ${package} -R ${REPO}
+          done
 
   # package-win:
   #   name: Create MSI & Upload into GH Release assets

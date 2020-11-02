@@ -98,7 +98,7 @@ archives:
 
 # we use custom publisher for fixing archives and signing them
 release:
-  disable: false
+  disable: true
 
 checksum:
   name_template: 'checksums.txt'
