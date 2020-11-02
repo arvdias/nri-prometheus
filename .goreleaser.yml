@@ -98,9 +98,6 @@ archives:
 release:
   disable: true
 
-checksum:
-  name_template: 'checksums.txt'
-
 dockers:
   - 
     goos: linux
@@ -110,7 +107,7 @@ dockers:
       - nri-prometheus
     image_templates:
       - 'newrelic/nri-prometheus:{{ .Major }}.{{ .Minor }}'
-    skip_push: {{ .Env.PUSH_DOCKER }}
+    skip_push: true #${{ .Env.SKIP_PUSH_DOCKER }}
   - 
     goos: linux
     goarch: amd64
@@ -119,7 +116,7 @@ dockers:
       - nri-prometheus
     image_templates:
       - 'newrelic/nri-prometheus:{{ .Version }}'
-    skip_push: {{ .Env.PUSH_DOCKER }}
+    skip_push: true #${{ .Env.SKIP_PUSH_DOCKER }}
 
 snapshot:
   name_template: "{{ .Tag }}-next"

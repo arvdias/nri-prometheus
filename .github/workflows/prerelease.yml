@@ -133,13 +133,10 @@ jobs:
         run: make release
         env:
           PRERELEASE: true
-          PUSH_DOCKER: false
-      - name: upload assets
-        run: |
-          for package in $(find dist/ -regex ".*\.\(msi\|rpm\|deb\|zip\|tar.gz\)");do
-            echo "===> Uploading package: ${package}"
-            gh release upload ${TAG} ${package} -R ${REPO}
-          done
+          SKIP_PUSH_DOCKER: true
+      - uses: release-drafter/release-drafter@v5
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   # package-win:
   #   name: Create MSI & Upload into GH Release assets
