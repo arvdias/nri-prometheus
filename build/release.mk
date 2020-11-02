@@ -17,15 +17,17 @@ release/clean:
 	@echo "===> $(INTEGRATION) === [release/clean] remove build metadata files"
 	rm -fv $(CURDIR)/cmd/nri-prometheus/versioninfo.json
 	rm -fv $(CURDIR)/cmd/nri-prometheus/resource.syso
-	@go mod tidy
 
 .PHONY : release/deps
 release/deps: $(GORELEASER_BIN)
-	#@echo "===> $(INTEGRATION) === [release/deps] install goversioninfo"
+	@echo "===> $(INTEGRATION) === [release/deps] installing deps"
 	#@go get github.com/josephspurrier/goversioninfo/cmd/goversioninfo
+	@go mod download
+	@go mod tidy
+	
 
 .PHONY : release/build
-release/build: release/deps release/clean
+release/build: release/clean release/deps
 ifeq ($(PRERELEASE), true)
 	@echo "===> $(INTEGRATION) === [release/build] PRE-RELEASE compiling all binaries, creating packages, archives"
 	@$(GORELEASER_BIN) release --config $(CURDIR)/build/.goreleaser.yml
