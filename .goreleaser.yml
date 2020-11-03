@@ -107,7 +107,8 @@ dockers:
       - nri-prometheus
     image_templates:
       - 'newrelic/nri-prometheus:{{ .Major }}.{{ .Minor }}'
-    skip_push: true #${{ .Env.SKIP_PUSH_DOCKER }}
+    # auto mean that if version has rc-1 or similar it won't be pushed
+    skip_push: auto
   - 
     goos: linux
     goarch: amd64
@@ -116,7 +117,7 @@ dockers:
       - nri-prometheus
     image_templates:
       - 'newrelic/nri-prometheus:{{ .Version }}'
-    skip_push: true #${{ .Env.SKIP_PUSH_DOCKER }}
+    skip_push: false
 
 snapshot:
   name_template: "{{ .Tag }}-next"
