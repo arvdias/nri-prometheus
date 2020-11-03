@@ -15,26 +15,20 @@ $(GORELEASER_BIN): bin
 .PHONY : release/clean
 release/clean:
 	@echo "===> $(INTEGRATION) === [release/clean] remove build metadata files"
-	#rm -fv $(CURDIR)/cmd/nri-prometheus/versioninfo.json
-	#rm -fv $(CURDIR)/cmd/nri-prometheus/resource.syso
+	rm -fv $(CURDIR)/cmd/nri-prometheus/versioninfo.json
+	rm -fv $(CURDIR)/cmd/nri-prometheus/resource.syso
 
 .PHONY : release/deps
 release/deps: $(GORELEASER_BIN)
 	@echo "===> $(INTEGRATION) === [release/deps] installing deps"
 	@go get github.com/josephspurrier/goversioninfo/cmd/goversioninfo
-	# remove goversioninfo from go.mod
 	@go mod tidy
 	
 
 .PHONY : release/build
 release/build: release/deps release/clean
-ifeq ($(PRERELEASE), true)
-	@echo "===> $(INTEGRATION) === [release/build] PRE-RELEASE compiling all binaries, creating packages, archives"
-	@$(GORELEASER_BIN) release --config $(CURDIR)/.goreleaser.yml --skip-validate --rm-dist
-else
-	@echo "===> $(INTEGRATION) === [release/build] build compiling all binaries"
-	@$(GORELEASER_BIN) build --config $(CURDIR)/.goreleaser.yml --skip-validate --snapshot --rm-dist
-endif
+	@echo "===> $(INTEGRATION) === [release/build] RELEASE compiling all binaries, creating packages, archives"
+	@$(GORELEASER_BIN) release --config $(CURDIR)/.goreleaser.yml --rm-dist
 
 .PHONY : release/fix-archive
 release/fix-archive:
@@ -57,7 +51,7 @@ release/publish:
 
 .PHONY : release
 release: release/build release/fix-archive release/publish release/clean
-	# release/sign/nix
+	# release/sign/nix 
 	@echo "===> $(INTEGRATION) === [release/publish] full pre-release cycle complete for nix"
 
 OS := $(shell uname -s)

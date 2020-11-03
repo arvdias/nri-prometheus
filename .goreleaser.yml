@@ -116,7 +116,7 @@ dockers:
       - nri-prometheus
     image_templates:
       - 'newrelic/nri-prometheus:{{ .Version }}'
-    skip_push: true #${{ .Env.SKIP_PUSH_DOCKER }}
+    skip_push: ${{ .Env.SKIP_PUSH_DOCKER }}
 
 snapshot:
   name_template: "{{ .Tag }}-next"
